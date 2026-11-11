@@ -1,5 +1,6 @@
 package com.betancourt.backend.model;
 
+<<<<<<< HEAD
 import jakarata.persistence.Entity;
 import jakarata.persistence.Generatedvalue;
 import jakarata.persistence.GenerationType;
@@ -73,3 +74,8 @@ public class Productos{
     }
 
 }
+=======
+public class Productos {
+    
+}
+>>>>>>> e0802dc43fe5ef48f6355db3c8369b2a555c5ba7
