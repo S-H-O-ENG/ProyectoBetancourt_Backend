@@ -19,10 +19,14 @@ public class Movimientos{
     Private Integer Cantidad;
     Private String Observacion;
 
-    public Productos(){
+    @ManyToOne(fetch = fetchType.LAZY)
+    @JoinColumn(name = "ID_Producto", nullable = false)
+    private Productos productos;
+
+    public Movimientos(){
     }
 
-    public Productos(Integer ID_movimiento,DateTime Fecha,Integer Cantidad, Varchar Observacion){
+    public Movimientos(Integer ID_movimiento,DateTime Fecha,Integer Cantidad, Varchar Observacion){
      this.ID_movimiento = ID_movimiento;  
      this.Fecha = Fecha;   
      this.Cantidad = Cantidad;

@@ -1,6 +1,5 @@
 package com.betancourt.backend.model;
 
-<<<<<<< HEAD
 import jakarata.persistence.Entity;
 import jakarata.persistence.Generatedvalue;
 import jakarata.persistence.GenerationType;
@@ -15,11 +14,17 @@ import jakarata.persistence.table;
 public class Productos{
     @id
     @Generatedvalue(strategy = GenerationType.IDENTITY)
+    
     Private Integer ID_Producto;
     Private String Nombre;   
     Private Integer Cantidad;
     Private Double Precio;
     Private String Estado;
+
+    @OneToMany(mappedBy = "Productos", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Movimientos> Movimientos_Inventario = new ArrayList<>();
+    
+    
 
     public Productos(){
     }
@@ -74,8 +79,3 @@ public class Productos{
     }
 
 }
-=======
-public class Productos {
-    
-}
->>>>>>> e0802dc43fe5ef48f6355db3c8369b2a555c5ba7
