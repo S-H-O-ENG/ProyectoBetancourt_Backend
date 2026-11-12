@@ -6,11 +6,13 @@ import jakarta.persistence.Entity; //ESTA LIBRERIA ES PARA INDICAR QUE LA CLASE 
 import jakarta.persistence.GeneratedValue; //ESTA LIBRERIA ES PARA INDICAR QUE EL VALOR DEL ID SE GENERA AUTOMATICAMENTE
 import jakarta.persistence.GenerationType; //ESTA LIBRERIA ES PARA INDICAR EL TIPO DE GENERACION DEL ID
 import jakarta.persistence.Id; //ESTA LIBRERIA ES PARA INDICAR QUE EL ATRIBUTO ES EL ID DE LA ENTIDAD
-import jakarta.persistence.Table; //ESTA LIBRERIA ES PARA INDICAR EL NOMBRE DE LA TABLA EN LA BASE DE DATOS 
+import jakarta.persistence.Table; //ESTA LIBRERIA ES PARA INDICAR EL NOMBRE DE LA TABLA EN LA BASE DE DATOS
+
+//import jakarta.persistence.*; SIRVE PARA REEMPLAZAR TODOS LAS IMPORACIONES ANTERIORES, ESTE IMPORTA TODO LO DE JAKARTA PERSISTENCE DE UNA
 
 
 //entity sirve para indicar que esta clase es una entidad de la base de datos osea una tabla, eso hace que cada objeto que se cree aqui se convierta en un registro dentro de la base de datos
-@Entity 
+@Entity
 //table sirve para indicar el nombre de la tabla que se va a crear en la base de datos, es el mapeador de tablas
 //el mapeador es el orm = mapeo de objeto relacional = aqui el orm es hibernate que se comunica atrabes de jpa con la base de datos, hibernate es el que se encarga de crear la tabla en la base de datos y de mapear los objetos a registros en la tabla, osea que el orm hace de puente entre la base de datos y el lenguaje de programacion, en este caso java, para que no tengamos que escribir codigo sql para crear la tabla y los registros, sino que hibernate lo hace por nosotros
 //jpa = java persistence api = es la api de java que nos permite trabajar con bases de datos relacionales, es la que nos permite mapear objetos a registros en la base de datos, y es la que nos permite hacer consultas a la base de datos sin tener que escribir codigo sql, sino que podemos usar metodos de java para hacer consultas a la base de datos
