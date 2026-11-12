@@ -1,81 +1,85 @@
 package com.betancourt.backend.model;
 
-import jakarata.persistence.Entity;
-import jakarata.persistence.Generatedvalue;
-import jakarata.persistence.GenerationType;
-import jakarata.persistence.id;
-import jakarata.persistence.table;
+import java.util.ArrayList;
 
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
+@Table(name = "Productos")
 
-@table(name = "Productos")
+public class Productos {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id_Producto;
 
-public class Productos{
-    @id
-    @Generatedvalue(strategy = GenerationType.IDENTITY)
-    
-    Private Integer ID_Producto;
-    Private String Nombre;   
-    Private Integer Cantidad;
-    Private Double Precio;
-    Private String Estado;
+    private String nombre;
+    private Integer cantidad;
+    private Double precio;
+    private String estado;
 
-    @OneToMany(mappedBy = "Productos", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "Productos")
     private List<Movimientos> Movimientos_Inventario = new ArrayList<>();
-    
-    
 
-    public Productos(){
+    public Productos() {
     }
 
-    public Productos(Integer ID_Producto,Varchar Nombre,Integer Cantidad,Double Precio, Varchar Estado){
-     this.ID_Producto = ID_Producto;  
-     this.Nombre = Nombre;   
-     this.Cantidad = Cantidad;
-     this.Precio = Precio;
-     this.Estado = Estado;
+    public Productos(Integer id_Producto, String nombre, Integer cantidad, Double precio, String estado) {
+        this.id_Producto = id_Producto;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.estado = estado;
+    }
+
+    public Integer getId_Producto() {
+        return id_Producto;
+    }
+
+    public void setId_Producto(Integer id_Producto) {
+        this.id_Producto = id_Producto;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public List<Movimientos> getMovimientos_Inventario() {
+        return Movimientos_Inventario;
+    }
+
+    public void setMovimientos_Inventario(List<Movimientos> movimientos_Inventario) {
+        Movimientos_Inventario = movimientos_Inventario;
     }
 
 
-    public Integer getID_Producto(){
-        return ID_Producto;
-    }
-
-    public void setID_Producto(Integer ID_Producto){
-        this.ID_Producto = ID_Producto;
-    }
-
-    public String getNombre(){
-        return Nombre;
-    }
-
-    public void setNombre(String Nombre){
-        this.Nombre = Nombre;
-    }
-
-    public Integer getCantidad(){
-        return Cantidad;
-    }
-
-    public void setCantidad(Integer Cantidad){
-        this.Cantidad = Cantidad;
-    }
-
-    public Double getPrecio(){
-        return Precio;
-    }
-
-    public void setPrecio(Double Precio){
-        this.Precio = Precio;
-    }
-
-    public String getEstado(){
-        return Estado;
-    }
-
-    public void setEstado(String Estado){
-        this.Estado = Estado;
-    }
 
 }
