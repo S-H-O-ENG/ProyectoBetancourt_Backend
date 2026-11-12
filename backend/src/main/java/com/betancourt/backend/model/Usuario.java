@@ -26,6 +26,8 @@ public class Usuario {
     private String apellido; //atributo apellido es el apellido del usuario, y es de tipo string porque es una cadena de caracteres
     private String telefono; //atributo telefono es el telefono del usuario, y es de tipo string porque aunque el telefono sean numros no se usan para hacer operaciones y muchas veces tienen codigos de pais y signos, por eso es mejor guaradlos como string
     private String correo; //atributo correo es el correo del usuario, y es de tipo string porque es una cadena de caracteres
+    private String pass; //contra 
+    private Boolean estado; //
 
     
     //se generar metodos constructores, se genera 2 tipos de constructor 1. vacio = ESTE CONTRCUTOR ES OBLIGATORIO Y VITAL PORQUE CUANDO EL PROGRAMA DE SPING HACE UNA CONSULTA A POSTGRE NECECITA CREAR UN OBJETO VACIO EN LA MEMORIA PARA DESPUES LLENARLO CON LOS DATOS DE LA BD, SIN ESTE CONSTRCUTOR VACIO DARA ERROR 2. constructor con parametros = NO ES OBLIGATORIO PERO SE USA PARA QUE NOSOSTROS PODAMOS CREAR UN OBJETO PONIENDO TODOS LOS DATOS DE UNA VEZ, OSEA QUE NOSOTROS PODEMOS CREAR UN OBJETO Y PASARLE TODOS LOS DATOS DEL USUARIO DE UNA VEZ, EN LUGAR DE CREAR EL OBJETO VACIO Y DESPUES LLENARLO CON LOS SETTERS, ESTE CONSTRUCTOR CON PARAMETROS ES MAS RAPIDO Y EFICIENTE PARA CREAR OBJETOS
@@ -33,12 +35,14 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Integer idusuario, String nombre, String apellido, String telefono, String correo) {
+    public Usuario(Integer idusuario, String nombre, String apellido, String telefono, String correo, String pass, Boolean estado) {
         this.idusuario = idusuario;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
         this.correo = correo;
+        this.pass = pass;
+        this.estado = estado;
     }
 
     
@@ -83,6 +87,24 @@ public class Usuario {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    
     
     
 }
