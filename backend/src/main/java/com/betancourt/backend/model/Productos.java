@@ -18,8 +18,8 @@ public class Productos {
     private Double precio;
     private String estado;
 
-    @OneToMany(mappedBy = "Productos")
-    private List<Movimientos> Movimientos_Inventario = new ArrayList<>();
+   // @OneToMany(mappedBy = "Productos")
+   // private List<Movimientos> Movimientos_Inventario = new ArrayList<>();
 
     public Productos() {
     }
@@ -72,13 +72,13 @@ public class Productos {
         this.estado = estado;
     }
 
-    public List<Movimientos> getMovimientos_Inventario() {
-        return Movimientos_Inventario;
-    }
+   // public List<Movimientos> getMovimientos_Inventario() {
+   //     return Movimientos_Inventario;
+   // }
 
-    public void setMovimientos_Inventario(List<Movimientos> movimientos_Inventario) {
-        Movimientos_Inventario = movimientos_Inventario;
-    }
+   // public void setMovimientos_Inventario(List<Movimientos> movimientos_Inventario) {
+   //     Movimientos_Inventario = movimientos_Inventario;
+    //}
 
 
 
