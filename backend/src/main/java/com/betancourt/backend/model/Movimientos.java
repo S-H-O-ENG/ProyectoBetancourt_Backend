@@ -3,12 +3,10 @@ package com.betancourt.backend.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-
-
 @Entity
 @Table(name = "Movimientos_Inventario")
+public class Movimientos {
 
-public class Movimientos{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_movimiento;
@@ -17,21 +15,24 @@ public class Movimientos{
     private Integer cantidad;
     private String observacion;
 
-    //CORRIJAL LAS RELACIONES DAVOT
-    //@ManyToOne(fetch = fetchType.LAZY)
-    //@JoinColumn(name = "ID_Producto", nullable = false)
-    //private Productos productos;
+    // Relación ManyToOne: Muchos movimientos pertenecen a un producto
+    // name = "producto_idproducto" coincide con la llave foránea de tu base de datos (según el diagrama)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producto_idproducto", nullable = false)
+    private Productos producto;
 
-    public Movimientos(){
+    public Movimientos() {
     }
 
-    public Movimientos(Integer id_movimiento, LocalDateTime fechahora, Integer cantidad, String observacion,
-            Productos productos) {
+    public Movimientos(Integer id_movimiento, LocalDateTime fechahora, Integer cantidad, String observacion, Productos producto) {
         this.id_movimiento = id_movimiento;
         this.fechahora = fechahora;
         this.cantidad = cantidad;
         this.observacion = observacion;
+        this.producto = producto;
     }
+
+    // Getters y Setters
 
     public Integer getId_movimiento() {
         return id_movimiento;
@@ -65,4 +66,11 @@ public class Movimientos{
         this.observacion = observacion;
     }
 
+    public Productos getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Productos producto) {
+        this.producto = producto;
+    }
 }
