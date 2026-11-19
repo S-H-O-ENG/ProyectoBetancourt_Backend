@@ -15,14 +15,14 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity> handleNotFound(EntityNotFoundException ex) {
+    public ResponseEntity<Map<String, String>> handleNotFound(EntityNotFoundException ex) {
         Map<String, String> body = new HashMap<>();
         body.put("detail", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> errores = new HashMap<>();
         ex.getBindingResult().getFieldErrors()
                 .forEach(err -> errores.put(err.getField(), err.getDefaultMessage()));
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity> handleGeneral(Exception ex) {
+    public ResponseEntity<Map<String, String>> handleGeneral(Exception ex) {
         Map<String, String> body = new HashMap<>();
         body.put("detail", "Error interno del servidor: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);

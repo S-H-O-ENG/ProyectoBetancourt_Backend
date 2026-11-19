@@ -1,7 +1,7 @@
 package com.betancourt.backend.controller;
 
-import com.betancourt.backend.dto.ProveedorRequestDTO;
-import com.betancourt.backend.dto.ProveedorResponseDTO;
+import com.betancourt.backend.dto.proveedor.ProveedorRequestDTO;
+import com.betancourt.backend.dto.proveedor.ProveedorResponseDTO;
 import com.betancourt.backend.service.ProveedorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

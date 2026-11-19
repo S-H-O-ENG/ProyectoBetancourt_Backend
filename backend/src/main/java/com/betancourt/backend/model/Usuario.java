@@ -2,11 +2,14 @@
 package com.betancourt.backend.model;
 
 //importaciones de librerias necesarias
+import com.betancourt.backend.domain.enums.UserRole;
 import jakarta.persistence.Entity; //ESTA LIBRERIA ES PARA INDICAR QUE LA CLASE ES UNA ENTIDAD DE BASE DE DATOS
 import jakarta.persistence.GeneratedValue; //ESTA LIBRERIA ES PARA INDICAR QUE EL VALOR DEL ID SE GENERA AUTOMATICAMENTE
 import jakarta.persistence.GenerationType; //ESTA LIBRERIA ES PARA INDICAR EL TIPO DE GENERACION DEL ID
 import jakarta.persistence.Id; //ESTA LIBRERIA ES PARA INDICAR QUE EL ATRIBUTO ES EL ID DE LA ENTIDAD
 import jakarta.persistence.Table; //ESTA LIBRERIA ES PARA INDICAR EL NOMBRE DE LA TABLA EN LA BASE DE DATOS
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 //import jakarta.persistence.*; SIRVE PARA REEMPLAZAR TODOS LAS IMPORACIONES ANTERIORES, ESTE IMPORTA TODO LO DE JAKARTA PERSISTENCE DE UNA
 
@@ -26,8 +29,10 @@ public class Usuario {
     private String apellido; //atributo apellido es el apellido del usuario, y es de tipo string porque es una cadena de caracteres
     private String telefono; //atributo telefono es el telefono del usuario, y es de tipo string porque aunque el telefono sean numros no se usan para hacer operaciones y muchas veces tienen codigos de pais y signos, por eso es mejor guaradlos como string
     private String correo; //atributo correo es el correo del usuario, y es de tipo string porque es una cadena de caracteres
-    private String pass; //contra 
-    private Boolean estado; //
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private UserRole rol;
+    private Boolean activo;
 
     
     //se generar metodos constructores, se genera 2 tipos de constructor 1. vacio = ESTE CONTRCUTOR ES OBLIGATORIO Y VITAL PORQUE CUANDO EL PROGRAMA DE SPING HACE UNA CONSULTA A POSTGRE NECECITA CREAR UN OBJETO VACIO EN LA MEMORIA PARA DESPUES LLENARLO CON LOS DATOS DE LA BD, SIN ESTE CONSTRCUTOR VACIO DARA ERROR 2. constructor con parametros = NO ES OBLIGATORIO PERO SE USA PARA QUE NOSOSTROS PODAMOS CREAR UN OBJETO PONIENDO TODOS LOS DATOS DE UNA VEZ, OSEA QUE NOSOTROS PODEMOS CREAR UN OBJETO Y PASARLE TODOS LOS DATOS DEL USUARIO DE UNA VEZ, EN LUGAR DE CREAR EL OBJETO VACIO Y DESPUES LLENARLO CON LOS SETTERS, ESTE CONSTRUCTOR CON PARAMETROS ES MAS RAPIDO Y EFICIENTE PARA CREAR OBJETOS
@@ -35,14 +40,16 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Integer idusuario, String nombre, String apellido, String telefono, String correo, String pass, Boolean estado) {
+    public Usuario(Integer idusuario, String nombre, String apellido, String telefono, String correo,
+                   String password, UserRole rol, Boolean activo) {
         this.idusuario = idusuario;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
         this.correo = correo;
-        this.pass = pass;
-        this.estado = estado;
+        this.password = password;
+        this.rol = rol;
+        this.activo = activo;
     }
 
     
@@ -88,24 +95,28 @@ public class Usuario {
         this.correo = correo;
     }
 
-    public String getPass() {
-        return pass;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public Boolean getEstado() {
-        return estado;
+    public UserRole getRol() {
+        return rol;
     }
 
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
+    public void setRol(UserRole rol) {
+        this.rol = rol;
     }
 
-    
-    
-    
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
 }
 

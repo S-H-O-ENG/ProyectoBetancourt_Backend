@@ -16,5 +16,6 @@ import org.springframework.stereotype.Repository; //importacion de la libreria r
 
 //OJO, AQUI ES PUBLIC INTERFACE Y NO PUBLIC CLASS PQ = LA INTERFAZ ES EL MENU O LO QUE NOS DICE QUE PODEMOS HACER, LA INTERRFAZ NO LLEVA CODIGO POR DENTRO, SOLO DECLARAMOS LAS CLASES QUE VAMOS A UTILIZAR O LAS LIBRERIAAS, SI PONEMOS ESTO CMO CLASS VA A DAR ERROR ADEMAS DE QUE DEBERIAMOS ESCRIBIR NOSTROS MISMOS EL CRUD EN CODDIGO, CON LA INTERFAZ Y LA DECLAACIONES YA TENEMOS TODO ESO Y JAVA LO ARRANCA APENAS PRENDAMOS LA APP
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    
+    boolean existsByCorreo(String correo);
+    java.util.Optional<Usuario> findByCorreo(String correo);
 }

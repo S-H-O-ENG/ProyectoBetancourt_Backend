@@ -1,4 +1,4 @@
-package com.betancourt.backend.dto;
+package com.betancourt.backend.dto.proveedor;
 
 public record ProveedorResponseDTO(
     Integer idProveedor,
