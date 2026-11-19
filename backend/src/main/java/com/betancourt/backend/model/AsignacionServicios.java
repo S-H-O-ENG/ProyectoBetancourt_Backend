@@ -20,19 +20,19 @@ public class AsignacionServicios {
 
     private String observaciones;
 
-    // Relación con Trabajadores
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idtrabajador")
     private Trabajadores trabajador;
 
-    // Relación con Servicios
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idservicio")
     private Servicios servicio;
 
     public AsignacionServicios() {}
 
-    // Getters y Setters
+    
 
     public Long getIdAsignacion() {
         return idAsignacion;

@@ -15,7 +15,7 @@ public class Servicios {
 
     private String duracion;
 
-    // Relación con Clientes
+   
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idcliente")
     private Clientes cliente;
@@ -27,7 +27,7 @@ public class Servicios {
 
     public Servicios() {}
 
-    // Getters y Setters
+    
 
     public Long getIdServicio() {
         return idServicio;

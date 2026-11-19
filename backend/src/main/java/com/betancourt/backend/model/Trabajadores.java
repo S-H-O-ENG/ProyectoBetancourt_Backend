@@ -17,7 +17,7 @@ public class Trabajadores {
 
     public Trabajadores() {}
 
-    // Getters y Setters
+    
 
     public Long getIdTrabajador() {
         return idTrabajador;
