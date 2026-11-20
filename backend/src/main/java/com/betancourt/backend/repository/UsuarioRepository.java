@@ -8,9 +8,8 @@ import java.util.Optional;
 
 import com.betancourt.backend.model.Usuario; //importacion de la clase usuario para poder usarla en este archivo // cada archivo en repository debe de importar la tabla a la que se vaya a referir
 import org.springframework.data.jpa.repository.JpaRepository; //importacion de la libreria jpa para poder usarla en este archivo // esta importacion es como una libreria que trae ya todos los comandos basicos de bases de datos por ejemplo SAVE para guardar FINDALL para buscar todos COUNT para contar DELETE para eliminar etc, osea es como unn CRUD 
-import org.springframework.stereotype.Repository; //importacion de la libreria repository para poder usarla en este archivo //esta importacion es para indicar que esta clase es un repositorio, osea estp hac que java reconozca este archivo como un componente de base de datos
 
-@Repository // esta es una notacion de springboot que le avisa a springboot que este archivo debe de conectarsse a la bd 
+import java.util.Optional;
 
 
 //aqui heredamos los metodos o comandos de de la libreria JPAREPOSITORY  y los enfocamos en la tabla usuario, el Integr es para indicar que la llave primaria de esa tabla debe de ser ese tipo de dato

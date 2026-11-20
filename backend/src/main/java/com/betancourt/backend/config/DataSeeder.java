@@ -16,14 +16,15 @@ import org.springframework.context.annotation.Configuration; // pa indicar que a
 import com.betancourt.backend.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; //pa encriptar
 
-//declaramos @confi.. para que srpingboot se entere de que esta clase tiene archivos de configuraicon
-@Configuration 
+@Component
+public class DataSeeder implements CommandLineRunner {
 
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-public class DataSeeder {
-    @Bean 
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new  BCryptPasswordEncoder();
+    public DataSeeder(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // bean es un comando que sirve para que apenas se inicie la app ejecute el metodo
