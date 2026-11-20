@@ -1,3 +1,6 @@
+
+
+
 //la carpeta confg se crea al mismo nivel de model para que asi sea una estructura limpia de java
 //la carpeta se llama config pq regñlas de java y springboot porque agrupa el comportamiento global de la aplicacion, ocmo la seguridad cnecines o inyeccion de datos etc
 
@@ -5,12 +8,12 @@
 
 package com.betancourt.backend.config;
 
-import com.betancourt.backend.model.Usuario; // importamos la tabla - clase usuairo para poder trabjar en ella, por ejemplo para crear objetos 
+import com.betancourt.backend.model.Usuario; // importamos la tabla - clase usuairo para poder trabjar en ella, por ejemplo para crear objetos
 import com.betancourt.backend.repository.UsuarioRepository; // traemos la clase esta pra poder comunicarnos con la bd poder hacer el crud 
 import org.springframework.boot.CommandLineRunner; // ejecucion auto al momento de iniciar
 import org.springframework.context.annotation.Bean; // para ejecutar metodos y guardae resulatdos
 import org.springframework.context.annotation.Configuration; // pa indicar que aqui hay clases que definen configuraciones
-
+import com.betancourt.backend.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; //pa encriptar
 
 //declaramos @confi.. para que srpingboot se entere de que esta clase tiene archivos de configuraicon
@@ -25,30 +28,32 @@ public class DataSeeder {
 
     // bean es un comando que sirve para que apenas se inicie la app ejecute el metodo
     @Bean
-    //command.... se usa para ejecutar las tareas de el metodo apenas se inicie
-    //usuario repo usuaio repo.. aqui estamos llamando o trayendo la clase que creamos en la carpeta de repositorio para poder usarlo
-    CommandLineRunner initDatabase(UsuarioRepository usuarioRepository){
-        //return args // es una funcion que se ejecuta justo en el momento de arranque 
-        return args -> {
-            if (usuarioRepository.count() == 0 ){
-                Usuario superAdmin = new Usuario();
-                superAdmin.setNombre("Super");
-                superAdmin.setApellido("Admin");
-                superAdmin.setCorreo("Admin@betancourt.com");
+CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService jwtService) {
+    return args -> {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-                String passwordEncrip = passwordEncoder().encode("admin12345");
-                superAdmin.setPass(passwordEncrip);
+        if (usuarioRepository.count() == 0) {
+            Usuario superAdmin = new Usuario();
+            superAdmin.setNombre("Super");
+            superAdmin.setApellido("Admin");
+            superAdmin.setCorreo("Admin@betancourt.com");
 
+            String passwordEncrip = encoder.encode("admin12345");
+            superAdmin.setPass(passwordEncrip);
+            superAdmin.setEstado(true);
 
-                superAdmin.setEstado(true);
+            usuarioRepository.save(superAdmin);
+            System.out.println("Super Admin creado");
+        } else {
+            System.out.println("la bd ya tiene registros");
+        }
 
-                usuarioRepository.save(superAdmin);
-                System.out.println("Super Admin creado");
-            }else{
-                System.out.println("la bd ya tiene registros");
-            }
-        };
-    } 
-
-    
+        // --- PRUEBA DE JWT AL ARRANCAR ---
+        String tokenPrueba = jwtService.generateToken("Admin@betancourt.com");
+        System.out.println("========================================");
+        System.out.println("TOKEN JWT GENERADO: " + tokenPrueba);
+        System.out.println("¿El token es válido para Admin@betancourt.com?: " + jwtService.isTokenValid(tokenPrueba, "Admin@betancourt.com"));
+        System.out.println("========================================");
+    };
+}
 }
