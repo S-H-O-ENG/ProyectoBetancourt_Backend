@@ -1,11 +1,20 @@
+
+
+
+//la carpeta confg se crea al mismo nivel de model para que asi sea una estructura limpia de java
+//la carpeta se llama config pq regñlas de java y springboot porque agrupa el comportamiento global de la aplicacion, ocmo la seguridad cnecines o inyeccion de datos etc
+
+//Dataseeder.java // ESTE ARCHIVO ES UN ARCHIVO QUE SE EJECUTA UNA SOLA VEZ CADA QUE SE ENCIENDE LA PP O EL SEERVIDOR, SIU FUNCON ES INICIAR DATOS QUE SON NECESARIOSEN LA BASE DE DATOS// SE GUARDA EN CONFIG PQ COMO DICE ARRIBA ES LA CARPETA QUE GUARDA LAS REGLAS GLOBALES DEL SISTEMA // SU FUNCIONA IENTO ES 1. DATASEEDER REVISA LA BD AUTOMATICAMENTE AL INICIAR, OSEA TRAE LOS DATOS O PREGUNTA QUE SI HAY ALGUN DATO REGITRADO 2. SI NO HAY NADA NI CUENTAS NI NADA, SE NECECITA CREAR UN SUPER_ADMIN Y EL MANDA LA LERTA 3. CREA LCUENTA MAESTRA 4. REPITE CICLO SIN OBVIAMENTE SIN CREAR LA CUETA DE NUEVO
+
 package com.betancourt.backend.config;
 
-import com.betancourt.backend.domain.enums.UserRole;
-import com.betancourt.backend.model.Usuario;
-import com.betancourt.backend.repository.UsuarioRepository;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import com.betancourt.backend.model.Usuario; // importamos la tabla - clase usuairo para poder trabjar en ella, por ejemplo para crear objetos
+import com.betancourt.backend.repository.UsuarioRepository; // traemos la clase esta pra poder comunicarnos con la bd poder hacer el crud 
+import org.springframework.boot.CommandLineRunner; // ejecucion auto al momento de iniciar
+import org.springframework.context.annotation.Bean; // para ejecutar metodos y guardae resulatdos
+import org.springframework.context.annotation.Configuration; // pa indicar que aqui hay clases que definen configuraciones
+import com.betancourt.backend.security.JwtService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; //pa encriptar
 
 @Component
 public class DataSeeder implements CommandLineRunner {
@@ -18,21 +27,34 @@ public class DataSeeder implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public void run(String... args) {
-        String correoAdmin = "admin@tallerbetancourt.com";
+    // bean es un comando que sirve para que apenas se inicie la app ejecute el metodo
+    @Bean
+CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService jwtService) {
+    return args -> {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        if (!usuarioRepository.existsByCorreo(correoAdmin)) {
-            Usuario admin = new Usuario();
-            admin.setNombre("Administrador");
-            admin.setApellido("Betancourt");
-            admin.setCorreo(correoAdmin);
-            admin.setPassword(passwordEncoder.encode("Admin1234*"));
-            admin.setRol(UserRole.SUPER_ADMIN);
-            admin.setActivo(true);
+        if (usuarioRepository.count() == 0) {
+            Usuario superAdmin = new Usuario();
+            superAdmin.setNombre("Super");
+            superAdmin.setApellido("Admin");
+            superAdmin.setCorreo("Admin@betancourt.com");
 
-            usuarioRepository.save(admin);
-            System.out.println(">>> DataSeeder: Usuario SUPER_ADMIN creado (" + correoAdmin + " / Admin1234*)");
+            String passwordEncrip = encoder.encode("admin12345");
+            superAdmin.setPass(passwordEncrip);
+            superAdmin.setEstado(true);
+
+            usuarioRepository.save(superAdmin);
+            System.out.println("Super Admin creado");
+        } else {
+            System.out.println("la bd ya tiene registros");
         }
-    }
+
+        // --- PRUEBA DE JWT AL ARRANCAR ---
+        String tokenPrueba = jwtService.generateToken("Admin@betancourt.com");
+        System.out.println("========================================");
+        System.out.println("TOKEN JWT GENERADO: " + tokenPrueba);
+        System.out.println("¿El token es válido para Admin@betancourt.com?: " + jwtService.isTokenValid(tokenPrueba, "Admin@betancourt.com"));
+        System.out.println("========================================");
+    };
+}
 }
