@@ -1,7 +1,5 @@
 package com.betancourt.backend.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.betancourt.backend.dto.proveedor.proveedor.ProveedorRequestDTO;
-import com.betancourt.backend.dto.proveedor.proveedor.ProveedorResponseDTO;
+import com.betancourt.backend.dto.proveedor.ProveedorRequestDTO;
 import com.betancourt.backend.service.ProveedorService;
 
 import jakarta.validation.Valid;
@@ -30,22 +27,22 @@ public class ProveedorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProveedorResponseDTO>> listar() {
+    public ResponseEntity<?> listar() {
         return ResponseEntity.ok(proveedorService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProveedorResponseDTO> obtenerPorId(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(proveedorService.obtenerPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<ProveedorResponseDTO> crear(@Valid @RequestBody ProveedorRequestDTO dto) {
+    public ResponseEntity<?> crear(@Valid @RequestBody ProveedorRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(proveedorService.crear(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProveedorResponseDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ProveedorRequestDTO dto) {
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody ProveedorRequestDTO dto) {
         return ResponseEntity.ok(proveedorService.actualizar(id, dto));
     }
 
