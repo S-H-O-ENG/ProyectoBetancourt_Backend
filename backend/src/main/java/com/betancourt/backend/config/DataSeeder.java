@@ -22,14 +22,17 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) {
         String correoAdmin = "admin@tallerbetancourt.com";
 
-        if (!usuarioRepository.existsByCorreo(correoAdmin)) {
+        boolean adminExiste = usuarioRepository.findAll().stream()
+            .anyMatch(usuario -> correoAdmin.equalsIgnoreCase(usuario.getEmail()));
+
+        if (!adminExiste) {
             Usuario admin = new Usuario();
-            admin.setNombre("Administrador");
-            admin.setApellido("Betancourt");
-            admin.setCorreo(correoAdmin);
-            admin.setPassword(passwordEncoder.encode("Admin1234*"));
-            admin.setRol(UserRole.SUPER_ADMIN);
-            admin.setActivo(true);
+            admin.setFirstName("Administrador");
+            admin.setLastName("Betancourt");
+            admin.setEmail(correoAdmin);
+            admin.setPasswordHash(passwordEncoder.encode("Admin1234*"));
+            admin.setRole(UserRole.SUPER_ADMIN);
+            admin.setIsActive(true);
 
             usuarioRepository.save(admin);
             System.out.println(">>> DataSeeder: Usuario SUPER_ADMIN creado (" + correoAdmin + " / Admin1234*)");
