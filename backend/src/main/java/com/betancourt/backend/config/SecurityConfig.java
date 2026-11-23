@@ -18,21 +18,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 1. Habilitamos CORS usando la configuración definida abajo
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            // 2. Deshabilitamos CSRF (innecesario en APIs REST con JWT)
-            .csrf(csrf -> csrf.disable())
-            // 3. Definimos qué rutas son públicas y cuáles requieren token
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // Login y registro públicos
-                .anyRequest().authenticated()               // El resto requiere autenticación
-            )
-            // 4. Indicamos que no usaremos sesiones en servidor (stateless para JWT)
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
+          // 1. Habilitamos CORS usando la configuración definida abajo
+    .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    // 2. Deshabilitamos CSRF (innecesario en APIs REST con JWT)
+    .csrf(csrf -> csrf.disable())
+    // 3. Definimos qué rutas son públicas y cuáles requieren token
+    .authorizeHttpRequests(auth -> auth
+        .requestMatchers(
+            "/api/auth/**", // Login y registro públicos
+            // [CAMBIO] Rutas públicas para Swagger UI y OpenAPI sin error 403
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml"
+        ).permitAll()
+        .anyRequest().authenticated() // El resto requiere autenticación
+    )
+    // 4. Indicamos que no usaremos sesiones en servidor (stateless para JWT)
+    .sessionManagement(session -> session
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    );
 
-        return http.build();
+return http.build();
     }
 
     @Bean

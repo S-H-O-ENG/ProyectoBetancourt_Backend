@@ -48,9 +48,10 @@ public class AuthController {
             // 3. Validamos dos condiciones de seguridad esenciales:
             // a) Comparamos la contraseña escrita en el texto plano con el Hash encriptado guardado en la BD usando BCrypt.
             // b) Verificamos que el estado del usuario sea true (activo, asegurando que un usuario inhabilitado no pueda entrar).
-            boolean passwordCorrecta = passwordEncoder.matches(loginRequest.getPass(), usuario.getPass());
+            boolean passwordCorrecta = passwordEncoder.matches(loginRequest.getpassword(), usuario.getPassword());
 
-            if (passwordCorrecta && Boolean.TRUE.equals(usuario.getEstado())) {
+
+            if (passwordCorrecta && Boolean.TRUE.equals(usuario.getActivo())) {
                 
                 // 4. Si las credenciales son correctas, usamos tu JwtService para generar un token único basado en el correo del usuario
                 String token = jwtService.generateToken(usuario.getCorreo());

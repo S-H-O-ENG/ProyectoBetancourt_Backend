@@ -8,6 +8,7 @@
 
 package com.betancourt.backend.config;
 
+import com.betancourt.backend.domain.enums.UserRole;
 import com.betancourt.backend.model.Usuario; // importamos la tabla - clase usuairo para poder trabjar en ella, por ejemplo para crear objetos
 import com.betancourt.backend.repository.UsuarioRepository; // traemos la clase esta pra poder comunicarnos con la bd poder hacer el crud 
 import org.springframework.boot.CommandLineRunner; // ejecucion auto al momento de iniciar
@@ -16,15 +17,14 @@ import org.springframework.context.annotation.Configuration; // pa indicar que a
 import com.betancourt.backend.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; //pa encriptar
 
-@Component
-public class DataSeeder implements CommandLineRunner {
+//declaramos @confi.. para que srpingboot se entere de que esta clase tiene archivos de configuraicon
+@Configuration 
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataSeeder(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
+public class DataSeeder {
+    @Bean 
+    public BCryptPasswordEncoder passwordEncoder(){
+        return new  BCryptPasswordEncoder();
     }
 
     // bean es un comando que sirve para que apenas se inicie la app ejecute el metodo
@@ -38,10 +38,11 @@ CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService j
             superAdmin.setNombre("Super");
             superAdmin.setApellido("Admin");
             superAdmin.setCorreo("Admin@betancourt.com");
+            superAdmin.setRol(UserRole.SUPER_ADMIN);
+            superAdmin.setActivo(true);
 
-            String passwordEncrip = encoder.encode("admin12345");
-            superAdmin.setPass(passwordEncrip);
-            superAdmin.setEstado(true);
+            String passwordEncript = encoder.encode("admin12345");
+            superAdmin.setPassword(passwordEncript);
 
             usuarioRepository.save(superAdmin);
             System.out.println("Super Admin creado");
