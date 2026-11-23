@@ -2,10 +2,8 @@ package com.betancourt.backend.service;
 
 import com.betancourt.backend.dto.user.*;
 import com.betancourt.backend.exception.BusinessRuleException;
-import com.betancourt.backend.exception.ResourceNotFoundException;
 import com.betancourt.backend.model.Usuario;
 import com.betancourt.backend.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,20 +29,19 @@ public class UsuarioService {
         }
 
         // 2. Validar correo no duplicado
-        if (usuarioRepository.existsByEmail(emailClean)) {
+        if (usuarioRepository.existsByCorreo(emailClean)) {
             throw new BusinessRuleException("Ya existe un colaborador registrado con ese correo.");
         }
 
         // 3. Crear usuario con contraseña encriptada (BCrypt)
-        Usuario usuario = Usuario.builder()
-                .firstName(dto.getFirstName().trim())
-                .lastName(dto.getLastName().trim())
-                .email(emailClean)
-                .phone(dto.getPhone())
-                .passwordHash(passwordEncoder.encode(dto.getPassword()))
-                .role(dto.getRole())
-                .isActive(true)
-                .build();
+        Usuario usuario = new Usuario();
+        usuario.setNombre(dto.getFirstName().trim());
+        usuario.setApellido(dto.getLastName().trim());
+        usuario.setCorreo(emailClean);
+        usuario.setTelefono(dto.getPhone());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        usuario.setRol(dto.getRole());
+        usuario.setActivo(true);
 
         Usuario saved = usuarioRepository.save(usuario);
         return mapToResponse(saved);
@@ -52,15 +49,13 @@ public class UsuarioService {
 
     private UserResponseDTO mapToResponse(Usuario u) {
         UserResponseDTO dto = new UserResponseDTO();
-        dto.setId(u.getId());
-        dto.setFirstName(u.getFirstName());
-        dto.setLastName(u.getLastName());
-        dto.setEmail(u.getEmail());
-        dto.setPhone(u.getPhone());
-        dto.setRole(u.getRole());
-        dto.setIsActive(u.getIsActive());
-        dto.setCreatedAt(u.getCreatedAt());
-        dto.setUpdatedAt(u.getUpdatedAt());
+        dto.setId(u.getIdUsuario());
+        dto.setFirstName(u.getNombre());
+        dto.setLastName(u.getApellido());
+        dto.setEmail(u.getCorreo());
+        dto.setPhone(u.getTelefono());
+        dto.setRole(u.getRol());
+        dto.setIsActive(u.getActivo());
         return dto;
     }
 }
