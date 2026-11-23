@@ -1,13 +1,15 @@
 package com.betancourt.backend.service;
 
-import com.betancourt.backend.dto.proveedor.ProveedorRequestDTO;
-import com.betancourt.backend.dto.proveedor.ProveedorResponseDTO;
-import com.betancourt.backend.model.Proveedor;
-import com.betancourt.backend.repository.ProveedorRepository;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.betancourt.backend.dto.proveedor.proveedor.ProveedorRequestDTO;
+import com.betancourt.backend.dto.proveedor.proveedor.ProveedorResponseDTO;
+import com.betancourt.backend.model.Proveedor;
+import com.betancourt.backend.repository.ProveedorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProveedorService {
