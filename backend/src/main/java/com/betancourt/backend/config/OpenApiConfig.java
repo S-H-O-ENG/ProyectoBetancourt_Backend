@@ -18,7 +18,7 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("API REST - Taller de Betancourt (Kronos)")
+                        .title("API REST - Taller de Betancourt ")
                         .version("1.0.0")
                         .description("Documentación oficial del sistema de control de inventario, proveedores y servicios automotrices.")
                         .contact(new Contact()

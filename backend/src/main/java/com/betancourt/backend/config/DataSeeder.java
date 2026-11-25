@@ -45,7 +45,8 @@ CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService j
             superAdmin.setPassword(passwordEncript);
 
             usuarioRepository.save(superAdmin);
-            System.out.println("Super Admin creado");
+            System.out.println("Super Admin creado");  
+
         } else {
             System.out.println("la bd ya tiene registros");
         }
