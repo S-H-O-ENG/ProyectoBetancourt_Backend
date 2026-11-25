@@ -8,7 +8,7 @@ public class LoginRequest {
     private String correo;
 
     // Atributo privado para almacenar la contraseña que envía el frontend
-    private String pass;
+    private String password;
 
     // 1. CONSTRUCTOR VACÍO: OBLIGATORIO Y VITAL.
     // Spring Boot lo necesita para leer el JSON que manda React y transformarlo automáticamente en un objeto Java.
@@ -17,9 +17,9 @@ public class LoginRequest {
 
     // 2. CONSTRUCTOR CON PARÁMETROS:
     // No es estrictamente obligatorio para Spring, pero nos permite crear objetos pasándole ambos datos de golpe si lo necesitamos.
-    public LoginRequest(String correo, String pass) {
+    public LoginRequest(String correo, String password) {
         this.correo = correo;
-        this.pass = pass;
+        this.password = password;
     }
 
     // MÉTODOS GETTERS Y SETTERS:
@@ -32,11 +32,11 @@ public class LoginRequest {
         this.correo = correo;
     }
 
-    public String getPass() {
-        return pass;
+    public String getpassword() {
+        return password;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setpassword(String password) {
+        this.password = password;
     }
 }
