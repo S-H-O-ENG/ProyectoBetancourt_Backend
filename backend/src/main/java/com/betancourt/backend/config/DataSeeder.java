@@ -31,16 +31,17 @@ public class DataSeeder {
     @Bean
 CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService jwtService) {
     return args -> {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String correoAdmin = "admin@betancourt.com";
 
-        if (!usuarioRepository.existsByCorreo(correoAdmin)) {
-            Usuario admin = new Usuario();
-            admin.setNombre("Administrador");
-            admin.setApellido("Betancourt");
-            admin.setCorreo(correoAdmin);
-            admin.setPassword(passwordEncoder.encode("Admin1234*"));
-            admin.setRol(UserRole.SUPER_ADMIN);
-            admin.setActivo(true);
+        if (!usuarioRepository.existsByEmail(correoAdmin)) {
+            Usuario superAdmin = Usuario.builder()
+                .firstName("Administrador")
+                .lastName("Betancourt")
+                .email(correoAdmin)
+                .passwordHash(passwordEncoder().encode("Admin1234*"))
+                .role(UserRole.SUPER_ADMIN)
+                .isActive(true)
+                .build();
 
             usuarioRepository.save(superAdmin);
             System.out.println("Super Admin creado");  
@@ -50,10 +51,10 @@ CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService j
         }
 
         // --- PRUEBA DE JWT AL ARRANCAR ---
-        String tokenPrueba = jwtService.generateToken("Admin@betancourt.com");
+        String tokenPrueba = jwtService.generateToken(correoAdmin);
         System.out.println("========================================");
         System.out.println("TOKEN JWT GENERADO: " + tokenPrueba);
-        System.out.println("¿El token es válido para Admin@betancourt.com?: " + jwtService.isTokenValid(tokenPrueba, "Admin@betancourt.com"));
+        System.out.println("¿El token es válido para " + correoAdmin + "? " + jwtService.isTokenValid(tokenPrueba, correoAdmin));
         System.out.println("========================================");
     };
 }

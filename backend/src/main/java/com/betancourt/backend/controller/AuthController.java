@@ -39,7 +39,7 @@
             // @RequestBody agarra el JSON enviado por React y lo convierte  en un objeto Java de tipo LoginRequest
 
             // 1. Buscamos en la base de datos si existe un usuario con el correo que ingresó el usuario
-            Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(loginRequest.getCorreo());
+            Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(loginRequest.getCorreo());
 
             // 2. Evaluamos si el usuario fue encontrado (isPresent devuelve true si la "caja" tiene un usuario adentro)
             if (usuarioOpt.isPresent()) {
@@ -48,21 +48,21 @@
                 // 3. Validamos dos condiciones de seguridad esenciales:
                 // a) Comparamos la contraseña escrita en el texto plano con el Hash encriptado guardado en la BD usando BCrypt.
                 // b) Verificamos que el estado del usuario sea true (activo, asegurando que un usuario inhabilitado no pueda entrar).
-                boolean passwordCorrecta = passwordEncoder.matches(loginRequest.getpassword(), usuario.getPassword());
+                boolean passwordCorrecta = passwordEncoder.matches(loginRequest.getPassword(), usuario.getPasswordHash());
 
 
-                if (passwordCorrecta && Boolean.TRUE.equals(usuario.getActivo())) {
+                if (passwordCorrecta && Boolean.TRUE.equals(usuario.getIsActive())) {
                     
                     // 4. Si las credenciales son correctas, usamos tu JwtService para generar un token único basado en el correo del usuario
-                    St  ring token = jwtService.generateToken(usuario.getCorreo());
+                    String token = jwtService.generateToken(usuario.getEmail());
 
                     // 5. Creamos un mapa (diccionario) para empaquetar los datos de éxito que mandaremos de regreso a React en formato JSON
                     Map<String, Object> response = new HashMap<>();
                     response.put("token", token);                  // El token JWT generado
-                    response.put("mensaje", usuario.getNombre()); // Un mensaje amigable de bienvenida
-                    response.put("nombre", usuario.getNombre());   // El nombre del usuario obtenido de la BD
-                    response.put("correo", usuario.getCorreo());   // El correo del usuario
-                    response.put("role", usuario.getRol());
+                    response.put("mensaje", usuario.getFirstName()); // Un mensaje amigable de bienvenida
+                    response.put("nombre", usuario.getFirstName());   // El nombre del usuario obtenido de la BD
+                    response.put("correo", usuario.getEmail());   // El correo del usuario
+                    response.put("role", usuario.getRole());
 
                     // 6. Retornamos un código HTTP 200 (OK) junto con el mapa convertido automáticamente a JSON
                     return ResponseEntity.ok(response);
