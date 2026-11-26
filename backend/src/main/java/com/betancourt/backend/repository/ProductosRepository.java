@@ -1,7 +1,17 @@
-package com.betancourt.backend.repository; // Paquete de repositorios de acceso a datos
+package com.betancourt.backend.repository;
 
-import com.betancourt.backend.model.Productos; // Entidad JPA del modelo de Productos
-import org.springframework.data.jpa.repository.JpaRepository; // Interfaz base con CRUD y consultas JPA
+import com.betancourt.backend.*;
+import com.betancourt.backend.model.Productos;
 
-public interface ProductosRepository extends JpaRepository<Productos, Integer> { // Gestiona la entidad Productos con clave primaria Integer
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ProductosRepository extends JpaRepository<Productos, Integer> {
+
+    List<Productos> findByNombreContainingIgnoreCase(String nombre);
+
+    List<Productos> findByCantidad(Integer cantidad);
 }

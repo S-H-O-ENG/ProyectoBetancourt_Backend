@@ -7,7 +7,6 @@ public class ProductosResponseDTO {
     private Integer cantidad;
     private Integer stockMinimo;
     private String estado;
-    private String sistemaVehiculo;
     private String tipoVehiculo;
 
     public ProductosResponseDTO() {
@@ -19,7 +18,6 @@ public class ProductosResponseDTO {
             Integer cantidad,
             Integer stockMinimo,
             String estado,
-            String sistemaVehiculo,
             String tipoVehiculo
     ) {
         this.id = id;
@@ -27,7 +25,6 @@ public class ProductosResponseDTO {
         this.cantidad = cantidad;
         this.stockMinimo = stockMinimo;
         this.estado = estado;
-        this.sistemaVehiculo = sistemaVehiculo;
         this.tipoVehiculo = tipoVehiculo;
     }
 
@@ -69,14 +66,6 @@ public class ProductosResponseDTO {
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public String getSistemaVehiculo() {
-        return sistemaVehiculo;
-    }
-
-    public void setSistemaVehiculo(String sistemaVehiculo) {
-        this.sistemaVehiculo = sistemaVehiculo;
     }
 
     public String getTipoVehiculo() {

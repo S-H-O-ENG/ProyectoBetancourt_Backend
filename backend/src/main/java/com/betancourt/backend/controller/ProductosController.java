@@ -2,7 +2,7 @@ package com.betancourt.backend.controller;
 
 import com.betancourt.backend.dto.Inventario.ProductosRequestDTO;
 import com.betancourt.backend.dto.Inventario.ProductosResponseDTO;
-import com.betancourt.backend.service.ProductosService;
+import com.betancourt.backend.service.ProductoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,26 +14,26 @@ import java.util.List;
 @RequestMapping("/api/v1/productos")
 public class ProductosController {
 
-    private final ProductosService productosService;
+    private final ProductoService productoService;
 
-    public ProductosController(ProductosService productosService) {
-        this.productosService = productosService;
+    public ProductosController(ProductoService productoService) {
+        this.productoService = productoService;
     }
 
     @GetMapping
     public ResponseEntity<List<ProductosResponseDTO>> listar() {
-        return ResponseEntity.ok(productosService.listarTodos());
+        return ResponseEntity.ok(productoService.listarTodos());
     }
 
     // En ProductosController.java
     @GetMapping("/{id}")
     public ResponseEntity<ProductosResponseDTO> obtenerPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(productosService.obtenerPorId(id));
+        return ResponseEntity.ok(productoService.obtenerPorId(id));
 }
 
     @PostMapping
     public ResponseEntity<ProductosResponseDTO> crear(@Valid @RequestBody ProductosRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productosService.crear(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productoService.crear(dto));
     }
 
     @PutMapping("/{id}")
@@ -41,12 +41,12 @@ public class ProductosController {
             @PathVariable Integer id,
             @Valid @RequestBody ProductosRequestDTO dto
     ) {
-        return ResponseEntity.ok(productosService.actualizar(id, dto));
+        return ResponseEntity.ok(productoService.actualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
-        productosService.eliminar(id);
+        productoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -6,38 +6,41 @@ import com.betancourt.backend.model.Productos;
 import com.betancourt.backend.repository.ProductosRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class ProductosService {
+public class ProductoService {
 
     private final ProductosRepository productosRepository;
 
-    public ProductosService(ProductosRepository productosRepository) {
+    public ProductoService(ProductosRepository productosRepository) {
         this.productosRepository = productosRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductosResponseDTO> listarTodos() {
         return productosRepository.findAll().stream()
                 .map(this::toResponse)
                 .toList();
     }
 
-   // En ProductosService.java
+    @Transactional(readOnly = true)
     public ProductosResponseDTO obtenerPorId(Integer id) {
-    Productos producto = productosRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado: " + id));
-    return toResponse(producto);
-}
+        Productos producto = productosRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado: " + id));
+        return toResponse(producto);
+    }
 
+    @Transactional
     public ProductosResponseDTO crear(ProductosRequestDTO dto) {
-        // TODO: Validar duplicado según los campos reales de Productos (ej. nombre/código)
         Productos producto = new Productos();
         aplicarDatos(producto, dto);
         return toResponse(productosRepository.save(producto));
     }
 
+    @Transactional
     public ProductosResponseDTO actualizar(Integer id, ProductosRequestDTO dto) {
         Productos producto = productosRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado: " + id));
@@ -45,6 +48,7 @@ public class ProductosService {
         return toResponse(productosRepository.save(producto));
     }
 
+    @Transactional
     public void eliminar(Integer id) {
         if (!productosRepository.existsById(id)) {
             throw new EntityNotFoundException("Producto no encontrado: " + id);
@@ -53,16 +57,11 @@ public class ProductosService {
     }
 
     private void aplicarDatos(Productos producto, ProductosRequestDTO dto) {
-        // TODO: Reemplazar por los getters del DTO y setters de la entidad Productos
-        // Ejemplo:
-        // producto.setNombre(dto.nombre());
-        // producto.setCantidad(dto.cantidad());
-        // producto.setStockMinimo(dto.stockMinimo());
-        // producto.setEstado(calcularEstado(dto.cantidad(), dto.stockMinimo()));
+        // Completa aquí con los campos reales de Productos y ProductosRequestDTO
     }
 
     private ProductosResponseDTO toResponse(Productos producto) {
-        // TODO: Ajustar argumentos según los campos definidos en ProductosResponseDTO
+        // Completa aquí con los campos reales de ProductosResponseDTO y Productos
         return new ProductosResponseDTO();
     }
 }
