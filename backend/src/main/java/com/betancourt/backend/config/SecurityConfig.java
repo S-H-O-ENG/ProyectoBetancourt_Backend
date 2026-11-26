@@ -1,5 +1,6 @@
 package com.betancourt.backend.config;
 
+import com.betancourt.backend.security.JwtAuthenticationFilter;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -15,31 +17,31 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-          // 1. Habilitamos CORS usando la configuración definida abajo
-    .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-    // 2. Deshabilitamos CSRF (innecesario en APIs REST con JWT)
-    .csrf(csrf -> csrf.disable())
-    // 3. Definimos qué rutas son públicas y cuáles requieren token
-    .authorizeHttpRequests(auth -> auth
-        .requestMatchers(
-            "/api/auth/**", // Login y registro públicos
-            // [CAMBIO] Rutas públicas para Swagger UI y OpenAPI sin error 403
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/v3/api-docs.yaml"
-        ).permitAll()
-        .anyRequest().authenticated() // El resto requiere autenticación
-    )
-    // 4. Indicamos que no usaremos sesiones en servidor (stateless para JWT)
-    .sessionManagement(session -> session
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-    );
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-return http.build();
+        return http.build();
     }
 
     @Bean
