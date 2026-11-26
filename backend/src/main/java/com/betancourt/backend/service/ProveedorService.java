@@ -1,13 +1,15 @@
 package com.betancourt.backend.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.betancourt.backend.dto.proveedor.ProveedorRequestDTO;
 import com.betancourt.backend.dto.proveedor.ProveedorResponseDTO;
 import com.betancourt.backend.model.Proveedor;
 import com.betancourt.backend.repository.ProveedorRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProveedorService {
@@ -26,7 +28,7 @@ public class ProveedorService {
 
     public ProveedorResponseDTO obtenerPorId(Long id) {
         Proveedor proveedor = proveedorRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado: " + id));
         return toResponse(proveedor);
     }
 
