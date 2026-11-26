@@ -1,13 +1,14 @@
 package com.betancourt.backend.model;
 
 import java.util.ArrayList;
-import java.util.List;
+
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Productos")
-public class Productos {
 
+public class Productos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_Producto;
@@ -17,10 +18,8 @@ public class Productos {
     private Double precio;
     private String estado;
 
-    // Relación OneToMany: Un producto tiene muchos movimientos
-    // mappedBy apunta al atributo 'producto' en la clase Movimientos
-    @OneToMany(mappedBy = "producto")
-    private List<Movimientos> movimientos_Inventario = new ArrayList<>();
+    @OneToMany(mappedBy = "Productos")
+    private List<Movimientos> Movimientos_Inventario = new ArrayList<>();
 
     public Productos() {
     }
@@ -32,8 +31,6 @@ public class Productos {
         this.precio = precio;
         this.estado = estado;
     }
-
-    // Getters y Setters
 
     public Integer getId_Producto() {
         return id_Producto;
@@ -76,21 +73,13 @@ public class Productos {
     }
 
     public List<Movimientos> getMovimientos_Inventario() {
-        return movimientos_Inventario;
+        return Movimientos_Inventario;
     }
 
     public void setMovimientos_Inventario(List<Movimientos> movimientos_Inventario) {
-        this.movimientos_Inventario = movimientos_Inventario;
-    }
-    
-    
-    public void addMovimiento(Movimientos movimiento) {
-        movimientos_Inventario.add(movimiento);
-        movimiento.setProducto(this);
+        Movimientos_Inventario = movimientos_Inventario;
     }
 
-    public void removeMovimiento(Movimientos movimiento) {
-        movimientos_Inventario.remove(movimiento);
-        movimiento.setProducto(null);
-    }
+
+
 }

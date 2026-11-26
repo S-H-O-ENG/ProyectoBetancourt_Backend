@@ -1,61 +1,65 @@
-
-
-
-//la carpeta confg se crea al mismo nivel de model para que asi sea una estructura limpia de java
-//la carpeta se llama config pq regñlas de java y springboot porque agrupa el comportamiento global de la aplicacion, ocmo la seguridad cnecines o inyeccion de datos etc
-
-//Dataseeder.java // ESTE ARCHIVO ES UN ARCHIVO QUE SE EJECUTA UNA SOLA VEZ CADA QUE SE ENCIENDE LA PP O EL SEERVIDOR, SIU FUNCON ES INICIAR DATOS QUE SON NECESARIOSEN LA BASE DE DATOS// SE GUARDA EN CONFIG PQ COMO DICE ARRIBA ES LA CARPETA QUE GUARDA LAS REGLAS GLOBALES DEL SISTEMA // SU FUNCIONA IENTO ES 1. DATASEEDER REVISA LA BD AUTOMATICAMENTE AL INICIAR, OSEA TRAE LOS DATOS O PREGUNTA QUE SI HAY ALGUN DATO REGITRADO 2. SI NO HAY NADA NI CUENTAS NI NADA, SE NECECITA CREAR UN SUPER_ADMIN Y EL MANDA LA LERTA 3. CREA LCUENTA MAESTRA 4. REPITE CICLO SIN OBVIAMENTE SIN CREAR LA CUETA DE NUEVO
-
 package com.betancourt.backend.config;
 
-import com.betancourt.backend.domain.enums.UserRole;
-import com.betancourt.backend.model.Usuario; // importamos la tabla - clase usuairo para poder trabjar en ella, por ejemplo para crear objetos
-import com.betancourt.backend.repository.UsuarioRepository; // traemos la clase esta pra poder comunicarnos con la bd poder hacer el crud 
-import org.springframework.boot.CommandLineRunner; // ejecucion auto al momento de iniciar
-import org.springframework.context.annotation.Bean; // para ejecutar metodos y guardae resulatdos
-import org.springframework.context.annotation.Configuration; // pa indicar que aqui hay clases que definen configuraciones
-import com.betancourt.backend.security.JwtService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; //pa encriptar
+import com.betancourt.backend.model.Usuario;
+import com.betancourt.backend.repository.UsuarioRepository;
 
-//declaramos @confi.. para que srpingboot se entere de que esta clase tiene archivos de configuraicon
-@Configuration 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-
+/**
+ * Crea un usuario administrador inicial.
+ *
+ * No modifica ni elimina los usuarios existentes.
+ */
+@Configuration
 public class DataSeeder {
-    @Bean 
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new  BCryptPasswordEncoder();
-    }
 
-    // bean es un comando que sirve para que apenas se inicie la app ejecute el metodo
     @Bean
-CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService jwtService) {
-    return args -> {
-        String correoAdmin = "admin@betancourt.com";
+    CommandLineRunner inicializarUsuarioAdministrador(
+            UsuarioRepository repository,
+            PasswordEncoder encoder) {
 
-        if (!usuarioRepository.existsByEmail(correoAdmin)) {
-            Usuario superAdmin = Usuario.builder()
-                .firstName("Administrador")
-                .lastName("Betancourt")
-                .email(correoAdmin)
-                .passwordHash(passwordEncoder().encode("Admin1234*"))
-                .role(UserRole.SUPER_ADMIN)
-                .isActive(true)
-                .build();
+        return args -> {
 
-            usuarioRepository.save(superAdmin);
-            System.out.println("Super Admin creado");  
+            // Comprueba si existen usuarios registrados.
+            if (repository.count() == 0) {
 
-        } else {
-            System.out.println("la bd ya tiene registros");
-        }
+                Usuario admin = new Usuario();
 
-        // --- PRUEBA DE JWT AL ARRANCAR ---
-        String tokenPrueba = jwtService.generateToken(correoAdmin);
-        System.out.println("========================================");
-        System.out.println("TOKEN JWT GENERADO: " + tokenPrueba);
-        System.out.println("¿El token es válido para " + correoAdmin + "? " + jwtService.isTokenValid(tokenPrueba, correoAdmin));
-        System.out.println("========================================");
-    };
-}
+                admin.setNombre("Super");
+                admin.setApellido("Admin");
+
+                admin.setCorreo(
+                    "admin@betancourt.com"
+                );
+
+                // La contraseña se guarda cifrada.
+                admin.setPass(
+                    encoder.encode("Admin12345*")
+                );
+
+                admin.setEstado(true);
+
+                admin.setRol("SUPER_ADMIN");
+
+                repository.save(admin);
+
+                System.out.println(
+                    "Usuario administrador inicial creado."
+                );
+
+                System.out.println(
+                    "Cambia la contraseña inicial inmediatamente."
+                );
+
+            } else {
+
+                System.out.println(
+                    "La tabla usuarios ya contiene registros."
+                );
+            }
+        };
+    }
 }
