@@ -16,10 +16,18 @@ public class Movimientos {
     private String observacion;
 
     // Relación ManyToOne: Muchos movimientos pertenecen a un producto
+
     // name = "producto_idproducto" coincide con la llave foránea de tu base de datos (según el diagrama)
+
+    // name = "producto_idproducto" coincide con la llave foránea de tu base de
+    // datos (según el diagrama)
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_idproducto", nullable = false)
     private Productos producto;
+
+
+
 
     public Movimientos() {
     }
@@ -30,8 +38,7 @@ public class Movimientos {
         this.cantidad = cantidad;
         this.observacion = observacion;
         this.producto = producto;
-    }
-
+}
     // Getters y Setters
 
     public Integer getId_movimiento() {

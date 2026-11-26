@@ -1,5 +1,8 @@
 package com.betancourt.backend.domain.enums;
 
-public class UserRole {
-    
+public enum UserRole {
+    SUPER_ADMIN,
+    MECANICO,
+    ADMINISTRATIVO,
+    AUXILIAR
 }

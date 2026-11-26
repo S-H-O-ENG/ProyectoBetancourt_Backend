@@ -12,8 +12,15 @@ public class Pedidos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idpedido;
 
+    private String nombre;
+    private String apellido;
+    private String rol;
+    private String proveedor;
+    private String repuesto;
+    private Integer cantidad;
     private String importancia;
     private String metodopago;
+    private String estado;
 
     // relacion muchos a muchos entre pedidos y productos, un pedido puede tener
     // muchos productos y un producto puede estar en muchos pedidos, se usa en este
@@ -38,14 +45,21 @@ public class Pedidos {
     public Pedidos() {
     }
 
-    public Pedidos(Integer idpedido, String importancia, String metodopago, List<Productos> productos,
-            Proveedor proveedor) {
+    public Pedidos(Integer idpedido, String nombre, String apellido, String rol, String proveedor, String repuesto,
+            Integer cantidad, String importancia, String metodopago, List<Productos> productos) {
         this.idpedido = idpedido;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.rol = rol;
+        this.proveedor = proveedor;
+        this.repuesto = repuesto;
+        this.cantidad = cantidad;
         this.importancia = importancia;
         this.metodopago = metodopago;
         this.productos = productos;
-        // this.proveedor = proveedor;
+        this.estado = estado;
     }
+    
 
     public Integer getIdpedido() {
         return idpedido;
@@ -53,6 +67,54 @@ public class Pedidos {
 
     public void setIdpedido(Integer idpedido) {
         this.idpedido = idpedido;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public String getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(String proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public String getRepuesto() {
+        return repuesto;
+    }
+
+    public void setRepuesto(String repuesto) {
+        this.repuesto = repuesto;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 
     public String getImportancia() {
@@ -79,12 +141,15 @@ public class Pedidos {
         this.productos = productos;
     }
 
-    // public Proveedor getProveedor() {
-    // return proveedor;
-    // }
+    public String getEstado() {
+        return estado;
+    }
 
-    // public void setProveedor(Proveedor proveedor) {
-    // this.proveedor = proveedor;
-    // }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
+    
+
+   
 }
