@@ -28,7 +28,7 @@ public class ProveedorService {
 
     public ProveedorResponseDTO obtenerPorId(Long id) {
         Proveedor proveedor = proveedorRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado: " + id));
         return toResponse(proveedor);
     }
 

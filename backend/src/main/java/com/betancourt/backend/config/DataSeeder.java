@@ -1,64 +1,40 @@
 package com.betancourt.backend.config;
 
+import com.betancourt.backend.domain.enums.UserRole;
 import com.betancourt.backend.model.Usuario;
 import com.betancourt.backend.repository.UsuarioRepository;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * Crea un usuario administrador inicial.
- *
- * No modifica ni elimina los usuarios existentes.
- */
 @Configuration
 public class DataSeeder {
 
+    private static final String ADMIN_EMAIL = "admin@betancourt.com";
+
     @Bean
-    CommandLineRunner inicializarUsuarioAdministrador(
-            UsuarioRepository repository,
-            PasswordEncoder encoder) {
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
+    @Bean
+    CommandLineRunner initDatabase(UsuarioRepository usuarioRepository,
+                                   PasswordEncoder passwordEncoder) {
         return args -> {
+            if (!usuarioRepository.existsByEmail(ADMIN_EMAIL)) {
+                Usuario superAdmin = Usuario.builder()
+                        .firstName("Administrador")
+                        .lastName("Betancourt")
+                        .email(ADMIN_EMAIL)
+                        .passwordHash(passwordEncoder.encode("Admin1234*"))
+                        .role(UserRole.SUPER_ADMIN)
+                        .isActive(true)
+                        .build();
 
-            // Comprueba si existen usuarios registrados.
-            if (repository.count() == 0) {
-
-                Usuario admin = new Usuario();
-
-                admin.setNombre("Super");
-                admin.setApellido("Admin");
-
-                admin.setCorreo(
-                    "admin@betancourt.com"
-                );
-
-                // La contraseña se guarda cifrada.
-                admin.setPass(
-                    encoder.encode("Admin12345*")
-                );
-
-                admin.setEstado(true);
-
-                admin.setRol("SUPER_ADMIN");
-
-                repository.save(admin);
-
-                System.out.println(
-                    "Usuario administrador inicial creado."
-                );
-
-                System.out.println(
-                    "Cambia la contraseña inicial inmediatamente."
-                );
-
-            } else {
-
-                System.out.println(
-                    "La tabla usuarios ya contiene registros."
-                );
+                usuarioRepository.save(superAdmin);
+                System.out.println("Super Admin creado");
             }
         };
     }

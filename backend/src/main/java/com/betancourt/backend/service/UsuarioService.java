@@ -141,6 +141,13 @@ public class UsuarioService {
         return mapToResponse(usuarioRepository.save(user));
     }
 
+    @Transactional
+    public UserResponseDTO changeStatus(Long id, Boolean isActive, String currentUserEmail) {
+        Usuario currentUser = usuarioRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario autenticado."));
+        return changeStatus(id, isActive, currentUser.getId());
+    }
+
     private UserResponseDTO mapToResponse(Usuario u) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(u.getId());
