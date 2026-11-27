@@ -4,6 +4,7 @@ import com.betancourt.backend.domain.enums.EstadoCliente;
 import com.betancourt.backend.dto.Clientes.ClienteRequestDTO;
 import com.betancourt.backend.dto.Clientes.ClienteResponseDTO;
 import com.betancourt.backend.dto.Clientes.VehiculoDTO;
+import com.betancourt.backend.exception.ResourceNotFoundException;
 import com.betancourt.backend.model.Clientes;
 import com.betancourt.backend.model.Vehiculos;
 import com.betancourt.backend.repository.ClientesRepository;
@@ -40,7 +41,7 @@ public class ClientesServiceImpl implements ClientesService {
     @Transactional(readOnly = true)
     public ClienteResponseDTO obtenerPorId(Long id) {
         Clientes cliente = clientesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
         return mapearAResponseDTO(cliente);
     }
 
@@ -77,7 +78,7 @@ public ClienteResponseDTO guardarCliente(ClienteRequestDTO dto) {
     @Transactional
     public ClienteResponseDTO actualizarCliente(Long id, ClienteRequestDTO dto) {
         Clientes cliente = clientesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
 
         cliente.setCedula(dto.getCedula());
         cliente.setNombre(dto.getNombre());
@@ -96,7 +97,7 @@ public ClienteResponseDTO guardarCliente(ClienteRequestDTO dto) {
     @Transactional
     public ClienteResponseDTO cambiarEstado(Long id, EstadoCliente estado) {
         Clientes cliente = clientesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
         cliente.setEstado(estado);
         return mapearAResponseDTO(clientesRepository.save(cliente));
     }
@@ -105,7 +106,7 @@ public ClienteResponseDTO guardarCliente(ClienteRequestDTO dto) {
     @Transactional
     public void eliminarCliente(Long id) {
         if (!clientesRepository.existsById(id)) {
-            throw new RuntimeException("Cliente no encontrado con id: " + id);
+            throw new ResourceNotFoundException("Cliente no encontrado con id: " + id);
         }
         clientesRepository.deleteById(id);
     }

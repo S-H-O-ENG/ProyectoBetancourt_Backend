@@ -2,6 +2,7 @@ package com.betancourt.backend.service.impl;
 
 import com.betancourt.backend.dto.pedidos.PedidosRequestDTO;
 import com.betancourt.backend.dto.pedidos.PedidosResponseDTO;
+import com.betancourt.backend.exception.ResourceNotFoundException;
 import com.betancourt.backend.model.Pedidos;
 import com.betancourt.backend.repository.PedidosRepository;
 import com.betancourt.backend.service.PedidosService;
@@ -45,7 +46,7 @@ public class PedidosServiceImpl implements PedidosService {
     @Override
     public PedidosResponseDTO actualizarEstado(Integer id, String nuevoEstado) {
         Pedidos pedido = pedidosRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado con id: " + id));
 
         pedido.setEstado(nuevoEstado);
         Pedidos actualizado = pedidosRepository.save(pedido);

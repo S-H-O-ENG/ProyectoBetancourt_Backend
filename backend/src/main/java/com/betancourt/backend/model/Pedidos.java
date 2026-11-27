@@ -57,7 +57,6 @@ public class Pedidos {
         this.importancia = importancia;
         this.metodopago = metodopago;
         this.productos = productos;
-        this.estado = estado;
     }
     
 
