@@ -1,3 +1,4 @@
+
 //la carpeta confg se crea al mismo nivel de model para que asi sea una estructura limpia de java
 //la carpeta se llama config pq regñlas de java y springboot porque agrupa el comportamiento global de la aplicacion, ocmo la seguridad cnecines o inyeccion de datos etc
 
@@ -15,59 +16,45 @@ import com.betancourt.backend.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; //pa encriptar
 
 //declaramos @confi.. para que srpingboot se entere de que esta clase tiene archivos de configuraicon
-@Configuration 
-
+@Configuration
 
 public class DataSeeder {
-    @Bean 
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new  BCryptPasswordEncoder();
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
-    // bean es un comando que sirve para que apenas se inicie la app ejecute el metodo
+    // bean es un comando que sirve para que apenas se inicie la app ejecute el
+    // metodo
     @Bean
-CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService jwtService, BCryptPasswordEncoder passwordEncoder) {
-    return args -> {
+    CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, JwtService jwtService) {
+        return args -> {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        if (usuarioRepository.count() == 0) {
-            Usuario superAdmin = new Usuario();
-            superAdmin.setNombre("Super");
-            superAdmin.setApellido("Admin");
-            superAdmin.setCorreo("Admin@betancourt.com");
-            superAdmin.setRol(UserRole.SUPER_ADMIN);
-            superAdmin.setActivo(true);
+            if (usuarioRepository.count() == 0) {
+                Usuario superAdmin = new Usuario();
+                superAdmin.setNombre("Super");
+                superAdmin.setApellido("Admin");
+                superAdmin.setCorreo("Admin@betancourt.com");
+                superAdmin.setRol(UserRole.SUPER_ADMIN);
+                superAdmin.setActivo(true);
 
-            String passwordEncript = passwordEncoder.encode("admin12345");
-            superAdmin.setPassword(passwordEncript);
+                String passwordEncript = encoder.encode("admin12345");
+                superAdmin.setPassword(passwordEncript);
 
-            usuarioRepository.save(superAdmin);
-            System.out.println("Super Admin creado");  
+                usuarioRepository.save(superAdmin);
+                System.out.println("Super Admin creado");
+            } else {
+                System.out.println("la bd ya tiene registros");
+            }
 
-        } else {
-            System.out.println("la bd ya tiene registros");
-        }
-
-        String correoAuxiliar = "auxiliar@betancourt.com";
-        if (usuarioRepository.findByCorreo(correoAuxiliar).isEmpty()) {
-        Usuario auxiliar = new Usuario();
-        auxiliar.setNombre("Auxiliar");
-        auxiliar.setApellido("Taller");
-        auxiliar.setTelefono("3001234567");
-        auxiliar.setCorreo("auxiliar@betancourt.com");
-        auxiliar.setPassword(passwordEncoder.encode("12345"));
-        auxiliar.setRol(UserRole.AUXILIAR);
-        auxiliar.setActivo(true);
-
-        usuarioRepository.save(auxiliar);
-        System.out.println("Usuario Auxiliar creado");
-        }
-
-        // --- PRUEBA DE JWT AL ARRANCAR ---
-        String tokenPrueba = jwtService.generateToken("Admin@betancourt.com");
-        System.out.println("========================================");
-        System.out.println("TOKEN JWT GENERADO: " + tokenPrueba);
-        System.out.println("¿El token es válido para Admin@betancourt.com?: " + jwtService.isTokenValid(tokenPrueba, "Admin@betancourt.com"));
-        System.out.println("========================================");
-    };
-}
+            // --- PRUEBA DE JWT AL ARRANCAR ---
+            String tokenPrueba = jwtService.generateToken("Admin@betancourt.com");
+            System.out.println("========================================");
+            System.out.println("TOKEN JWT GENERADO: " + tokenPrueba);
+            System.out.println("¿El token es válido para Admin@betancourt.com?: "
+                    + jwtService.isTokenValid(tokenPrueba, "Admin@betancourt.com"));
+            System.out.println("========================================");
+        };
+    }
 }
