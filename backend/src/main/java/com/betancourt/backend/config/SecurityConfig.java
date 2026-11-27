@@ -1,5 +1,6 @@
 package com.betancourt.backend.config;
 
+import com.betancourt.backend.security.JwtAuthenticationFilter;
 import java.util.List;
 import com.betancourt.backend.security.JwtAuthenticationFilter; // <-- Asegúrate de que este sea el nombre de tu filtro
 import org.springframework.context.annotation.Bean;

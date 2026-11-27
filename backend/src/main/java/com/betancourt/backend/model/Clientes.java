@@ -1,5 +1,6 @@
 package com.betancourt.backend.model;
 
+import com.betancourt.backend.domain.EstadoCliente;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class Clientes {
 
     private String telefono;
     private String correo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoCliente estado = EstadoCliente.ACTIVO;
 
     // Relación OneToMany apuntando a la clase Vehiculos
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,6 +52,9 @@ public class Clientes {
 
     public String getCorreo() { return correo; }
     public void setCorreo(String correo) { this.correo = correo; }
+
+    public EstadoCliente getEstado() { return estado; }
+    public void setEstado(EstadoCliente estado) { this.estado = estado; }
 
     public List<Vehiculos> getVehiculos() { return vehiculos; }
     public void setVehiculos(List<Vehiculos> vehiculos) { this.vehiculos = vehiculos; }
