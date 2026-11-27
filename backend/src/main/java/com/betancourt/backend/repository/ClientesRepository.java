@@ -1,6 +1,6 @@
 package com.betancourt.backend.repository;
 
-import com.betancourt.backend.domain.EstadoCliente;
+import com.betancourt.backend.domain.enums.EstadoCliente;
 import com.betancourt.backend.model.Clientes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

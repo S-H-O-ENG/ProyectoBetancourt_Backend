@@ -7,13 +7,15 @@ import com.betancourt.backend.security.JwtService;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -49,7 +51,7 @@ public class AuthService {
             PasswordEncoder encoder,
             JwtService jwtService,
             EmailService emailService,
-            @Value("${app.recovery.expiration-minutes}") int recoveryMinutes) {
+            @Value("${app.recovery.expiration-minutes:15}") int recoveryMinutes) {
 
         this.usuarios = usuarios;
         this.resetTokens = resetTokens;
@@ -67,7 +69,7 @@ public class AuthService {
 
         // Busca el usuario por correo.
         Usuario usuario = usuarios
-            .findByCorreoIgnoreCase(request.correo().trim())
+            .findByEmailIgnoreCase(request.getCorreo().trim())
             .orElseThrow(() ->
                 new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
@@ -77,10 +79,10 @@ public class AuthService {
 
         // Comprueba que la cuenta esté habilitada
         // y que la contraseña coincida con BCrypt.
-        if (!Boolean.TRUE.equals(usuario.getEstado())
+        if (!Boolean.TRUE.equals(usuario.getIsActive())
                 || !encoder.matches(
-                    request.password(),
-                    usuario.getPass()
+                    request.getPassword(),
+                    usuario.getPasswordHash()
                 )) {
 
             throw new ResponseStatusException(
@@ -95,9 +97,9 @@ public class AuthService {
         // Devuelve los datos que necesita React.
         return Map.of(
             "token", token,
-            "role", usuario.getRol(),
-            "nombre", usuario.getNombre(),
-            "correo", usuario.getCorreo(),
+            "role", usuario.getRole().name(),
+            "nombre", usuario.getFirstName(),
+            "correo", usuario.getEmail(),
             "expiresIn", jwtService.getExpirationMs()
         );
     }
@@ -108,7 +110,7 @@ public class AuthService {
     public Map<String, Object> perfil(String correo) {
 
         Usuario usuario = usuarios
-            .findByCorreoIgnoreCase(correo)
+            .findByEmailIgnoreCase(correo)
             .orElseThrow(() ->
                 new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED
@@ -116,14 +118,14 @@ public class AuthService {
             );
 
         return Map.of(
-            "id", usuario.getIdusuario(),
-            "nombre", usuario.getNombre(),
+            "id", usuario.getId(),
+            "nombre", usuario.getFirstName(),
             "apellido",
-            usuario.getApellido() == null
+            usuario.getLastName() == null
                 ? ""
-                : usuario.getApellido(),
-            "correo", usuario.getCorreo(),
-            "rol", usuario.getRol()
+                : usuario.getLastName(),
+            "correo", usuario.getEmail(),
+            "rol", usuario.getRole().name()
         );
     }
 
@@ -136,18 +138,18 @@ public class AuthService {
 
         // Busca la cuenta asociada al correo.
         Usuario usuario = usuarios
-            .findByCorreoIgnoreCase(request.correo().trim())
+            .findByEmailIgnoreCase(request.correo().trim())
             .orElse(null);
 
         // No revela si el correo está registrado.
         if (usuario == null
-                || !Boolean.TRUE.equals(usuario.getEstado())) {
+                || !Boolean.TRUE.equals(usuario.getIsActive())) {
             return;
         }
 
         // Elimina solicitudes anteriores.
-        resetTokens.deleteByUsuario_Idusuario(
-            usuario.getIdusuario()
+        resetTokens.deleteByUsuario_Id(
+            usuario.getId()
         );
 
         // Genera 32 bytes aleatorios.
@@ -181,11 +183,11 @@ public class AuthService {
         try {
 
             emailService.enviarRecuperacion(
-                usuario.getCorreo(),
+                usuario.getEmail(),
                 rawToken
             );
 
-        } catch (RuntimeException ex) {
+        } catch (MailException ex) {
 
             // Si el correo falla, informa el problema
             // sin exponer el token de recuperación.
@@ -230,7 +232,7 @@ public class AuthService {
         Usuario usuario = registro.getUsuario();
 
         // Cifra la nueva contraseña con BCrypt.
-        usuario.setPass(
+        usuario.setPasswordHash(
             encoder.encode(request.nuevaPassword())
         );
 
@@ -241,8 +243,8 @@ public class AuthService {
         resetTokens.save(registro);
 
         // Elimina los demás tokens de recuperación.
-        resetTokens.deleteByUsuario_Idusuario(
-            usuario.getIdusuario()
+        resetTokens.deleteByUsuario_Id(
+            usuario.getId()
         );
     }
 
@@ -263,7 +265,7 @@ public class AuthService {
                 .of()
                 .formatHex(hash);
 
-        } catch (Exception ex) {
+        } catch (NoSuchAlgorithmException ex) {
 
             throw new IllegalStateException(
                 "No fue posible procesar el token",

@@ -36,7 +36,7 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     @Column(name = "rol", nullable = false, length = 40)
     @Builder.Default
-    private UserRole role = UserRole.AUXILIAR;
+    private UserRole role = UserRole.CLIENTE;
 
     @Column(name = "estado", nullable = false)
     @Builder.Default

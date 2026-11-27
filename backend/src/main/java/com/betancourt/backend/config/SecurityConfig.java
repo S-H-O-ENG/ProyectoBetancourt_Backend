@@ -2,7 +2,6 @@ package com.betancourt.backend.config;
 
 import com.betancourt.backend.security.JwtAuthenticationFilter;
 import java.util.List;
-import com.betancourt.backend.security.JwtAuthenticationFilter; // <-- Asegúrate de que este sea el nombre de tu filtro
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -33,7 +32,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/api/auth/**",
+                    "/api/auth/login",
+                    "/api/auth/forgot-password",
+                    "/api/auth/reset-password",
                     "/swagger-ui.html",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",

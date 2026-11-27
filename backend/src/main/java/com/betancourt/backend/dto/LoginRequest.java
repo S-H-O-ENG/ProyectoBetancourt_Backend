@@ -1,13 +1,19 @@
 // Dirección del paquete donde se encuentra este archivo dentro de la estructura del proyecto
 package com.betancourt.backend.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 // Declaración de la clase pública que servirá como molde para recibir las credenciales desde React
 public class LoginRequest {
 
     // Atributo privado para almacenar el correo electrónico que envía el frontend
+    @NotBlank
+    @Email
     private String correo;
 
     // Atributo privado para almacenar la contraseña que envía el frontend
+    @NotBlank
     private String password;
 
     // 1. CONSTRUCTOR VACÍO: OBLIGATORIO Y VITAL.

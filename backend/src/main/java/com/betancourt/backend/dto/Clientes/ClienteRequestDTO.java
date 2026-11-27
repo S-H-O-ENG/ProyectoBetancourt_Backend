@@ -1,6 +1,6 @@
 package com.betancourt.backend.dto.Clientes;
 
-import com.betancourt.backend.domain.EstadoCliente;
+import com.betancourt.backend.domain.enums.EstadoCliente;
 
 public class ClienteRequestDTO {
 

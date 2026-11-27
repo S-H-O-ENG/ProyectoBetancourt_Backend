@@ -2,6 +2,7 @@ package com.betancourt.backend.security;
 
 import com.betancourt.backend.model.Usuario;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -72,20 +73,33 @@ public class JwtService {
             .compact();
     }
 
+    public String extractUsername(String token) {
+        return extractClaims(token).get("correo", String.class);
+    }
+
+    public boolean isTokenValid(String token, String username) {
+        Claims claims = extractClaims(token);
+        return username.equals(claims.get("correo", String.class))
+            && claims.getExpiration().after(new Date());
+    }
+
     /**
      * Valida la firma y vigencia del JWT
      * y obtiene el identificador del usuario.
      */
     public Integer obtenerIdUsuario(String token) {
 
-        String subject = Jwts.parser()
+        String subject = extractClaims(token).getSubject();
+
+        return Integer.valueOf(subject);
+    }
+
+    private Claims extractClaims(String token) {
+        return Jwts.parser()
             .verifyWith(key)
             .build()
             .parseSignedClaims(token)
-            .getPayload()
-            .getSubject();
-
-        return Integer.valueOf(subject);
+            .getPayload();
     }
 
     /**

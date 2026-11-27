@@ -16,5 +16,5 @@ public interface PasswordResetTokenRepository
     Optional<PasswordResetToken> findByTokenHash(String tokenHash);
 
     // Elimina los tokens anteriores de un usuario.
-    void deleteByUsuario_Idusuario(Integer idusuario);
+    void deleteByUsuario_Id(Long usuarioId);
 }

@@ -1,6 +1,6 @@
 package com.betancourt.backend.model;
 
-import com.betancourt.backend.domain.EstadoCliente;
+import com.betancourt.backend.domain.enums.EstadoCliente;
 import jakarta.persistence.*;
 import java.util.List;
 

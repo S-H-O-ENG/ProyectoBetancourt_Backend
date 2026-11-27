@@ -16,14 +16,16 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final String frontendUrl;
+    private final int recoveryMinutes;
 
     public EmailService(
             JavaMailSender mailSender,
-            @Value("${app.recovery.frontend-url}")
-            String frontendUrl) {
+            @Value("${app.recovery.frontend-url:http://localhost:5173}") String frontendUrl,
+            @Value("${app.recovery.expiration-minutes:15}") int recoveryMinutes) {
 
         this.mailSender = mailSender;
-        this.frontendUrl = frontendUrl;
+        this.frontendUrl = frontendUrl.replaceAll("/+$", "");
+        this.recoveryMinutes = recoveryMinutes;
     }
 
     /**
@@ -51,7 +53,7 @@ public class EmailService {
             "Recibimos una solicitud para cambiar tu contraseña.\n\n"
             + "Abre el siguiente enlace para continuar:\n"
             + enlace
-            + "\n\nEste enlace es válido por 15 minutos."
+            + "\n\nEste enlace es válido por " + recoveryMinutes + " minutos."
             + "\nSi no solicitaste este cambio, ignora este mensaje."
         );
 

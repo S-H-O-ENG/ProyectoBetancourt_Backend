@@ -1,6 +1,6 @@
 package com.betancourt.backend.service;
 
-import com.betancourt.backend.domain.EstadoCliente;
+import com.betancourt.backend.domain.enums.EstadoCliente;
 import com.betancourt.backend.dto.Clientes.ClienteRequestDTO;
 import com.betancourt.backend.dto.Clientes.ClienteResponseDTO;
 
