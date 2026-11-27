@@ -7,7 +7,7 @@ import com.betancourt.backend.security.JwtService;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.MailException;
+import org.springframework.Email.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -187,7 +187,7 @@ public class AuthService {
                 rawToken
             );
 
-        } catch (MailException ex) {
+        } catch (MailExceptionex) {
 
             // Si el correo falla, informa el problema
             // sin exponer el token de recuperación.
